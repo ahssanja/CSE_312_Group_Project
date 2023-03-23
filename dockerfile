@@ -7,7 +7,7 @@ WORKDIR /root
 
 # Running a shell command to download the neccesary dependancies for the pymongo
 RUN python -m pip install pymongo
-RUN apt install python3-django
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all the contents from this working directory into the VM's working directory
 COPY . .
