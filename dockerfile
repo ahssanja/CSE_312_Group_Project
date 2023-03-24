@@ -7,7 +7,7 @@ WORKDIR /root
 
 # Running a shell command to download the neccesary dependancies for the pymongo
 RUN python -m pip install pymongo
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir flask
 
 # Copy all the contents from this working directory into the VM's working directory
 COPY . .
@@ -18,4 +18,4 @@ EXPOSE 8015
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
 RUN chmod +x /wait
 
-CMD /wait && python3 -u main.py
+CMD /wait && python3 -u Server/server.py
