@@ -6,7 +6,7 @@ app = flask.Flask(__name__)
 
 mongo_client = MongoClient('mongo')
 db = mongo_client['cse312Team']
-chat_collection = db["users"]
+user_collection = db["users"]
 
 
 @app.route('/' ,methods=['GET', 'POST'])
@@ -34,10 +34,15 @@ def made_new_account():
         username = entire_data.get('username')
         confirmpassword = entire_data.get('confirmpassword')
 
-        print('Received email:', email)
-        print('Received password:', password)
-        print('Received username:', username)
-        print('Received confirmed password:', confirmpassword)
+        store_stuff = {}
+        store_stuff['email'] = email
+        store_stuff['password'] = password
+        store_stuff['username'] = username
+        store_stuff['confirmed'] = confirmpassword
+
+        user_collection.insert_one(store_stuff)
+
+
     return 'You have successfully made an account'
 
 
@@ -51,7 +56,13 @@ def login():
         print('Received email:', email)
         print('Received password:', password)
 
-    return 'You have successfully logged in'
+        data = user_collection.find({})
+
+        for item in data:
+            if item['email'] == email and item['password'] == password:
+                return 'You have successfully logged in'
+            else:
+                return 'Invalid login/ password details'
 
 
 
