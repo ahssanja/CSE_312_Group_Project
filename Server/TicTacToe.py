@@ -41,5 +41,5 @@ def tic_tac_toe():
     print_board(board)
     print("Player", winner, "wins!")
 
-tic_tac_toe()
+
 

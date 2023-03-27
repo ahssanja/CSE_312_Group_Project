@@ -1,6 +1,7 @@
 import flask
 from pymongo import MongoClient
 import TicTacToe
+import html
 app = flask.Flask(__name__)
 
 
@@ -39,11 +40,17 @@ def made_new_account():
         username = entire_data.get('username')
         confirmpassword = entire_data.get('confirmpassword')
 
+        if password != confirmpassword:
+            return "password and confirm passwords don't match"
+
+        if len(password) and len(confirmpassword) < 8:
+            return "password too short. Needs at least 8 characters"
+
         store_stuff = {}
-        store_stuff['email'] = email
-        store_stuff['password'] = password
-        store_stuff['username'] = username
-        store_stuff['confirmed'] = confirmpassword
+        store_stuff['email'] = html.escape(email)
+        store_stuff['password'] = html.escape(password)
+        store_stuff['username'] = html.escape(username)
+        store_stuff['confirmed'] = html.escape(confirmpassword)
 
         #user_collection.insert_one(store_stuff)
 
@@ -51,7 +58,7 @@ def made_new_account():
     return flask.redirect('/tic-tac-toe')
 
 
-@app.route('/LoggedIn' ,methods=['GET', 'POST'])
+@app.route('/LoggedIn', methods=['GET', 'POST'])
 def login():
     if flask.request.method == 'POST':
         entire_data = flask.request.form
@@ -69,8 +76,8 @@ def login():
 
 @app.route('/tic-tac-toe')
 def tictactoe():
-    game = TicTacToe.tic_tac_toe()
-    output = 'This is the output of my Tic Tac Toe Python code!'
+    #game = TicTacToe.tic_tac_toe()
+    #output = 'This is the output of my Tic Tac Toe Python code!'
 
     return flask.send_file('../HTML/LandingPage.html')
 
