@@ -42,4 +42,3 @@ def tic_tac_toe():
     print("Player", winner, "wins!")
 
 
-

@@ -7,7 +7,7 @@ WORKDIR /root
 
 # Running a shell command to download the neccesary dependancies for the pymongo
 RUN python -m pip install pymongo
-RUN pip3 install --no-cache-dir flask
+# RUN pip3 install --no-cache-dir flask
 
 # Copy all the contents from this working directory into the VM's working directory
 COPY . .

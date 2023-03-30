@@ -76,7 +76,7 @@ def login():
 
 @app.route('/tic-tac-toe')
 def tictactoe():
-    #game = TicTacToe.tic_tac_toe()
+    # game = TicTacToe.tic_tac_toe()
     #output = 'This is the output of my Tic Tac Toe Python code!'
 
     return flask.send_file('../HTML/LandingPage.html')
