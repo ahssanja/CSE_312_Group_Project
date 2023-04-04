@@ -1,6 +1,5 @@
 import flask
 from pymongo import MongoClient
-import TicTacToe
 import html
 app = flask.Flask(__name__)
 
@@ -29,7 +28,6 @@ def registercss():
 @app.route('/CSS/LandingPage.css' ,methods=['GET', 'POST'])
 def landingpagecss():
     return flask.send_file('../CSS/LandingPage.css')
-
 
 @app.route('/MadeNewAccount' ,methods=['GET', 'POST'])
 def made_new_account():
