@@ -1,78 +1,70 @@
-/*#logintxt{*/
-/*    color: black;*/
-/*    font-family: 'Nunito', serif;*/
-/*    font-style: normal;*/
-/*    font-weight: 600;*/
-/*    font-size: 35px;*/
-/*    position: relative;*/
-/*    top: 20vh;*/
-/*    left: 22vw;*/
-/*}*/
+/* CSS for Tic Tac Toe Login Page */
 
-/*.title {*/
-/*    font-size: 7vh;*/
-/*    font-weight: bold;*/
-/*    text-align: center;*/
-/*    margin-top: 5vh;*/
-/*    margin-bottom: 3vh;*/
-/*    color: #4fb11e;*/
-/*    font-family: 'Nunito', serif;*/
-/*    font-style: normal;*/
-/*}*/
-/*.login-form {*/
-/*    position: absolute;*/
-/*    height: 100%;*/
-/*    top: 50%;*/
-/*    left: 50%;*/
-/*    transform: translate(-50%, -50%);*/
-/*}*/
-
-/*#register{*/
-/*    color: black;*/
-/*    font-family: 'Nunito', serif;*/
-/*    font-style: normal;*/
-/*    font-weight: 600;*/
-/*    font-size: 35px;*/
-/*    position: relative;*/
-/*    top: 10vh;*/
-/*    left: 5vw;*/
-/*}*/
-
-/*#login{*/
-/*    position: relative;*/
-/*    width: 30vw;*/
-/*    height: 6vh;*/
-/*    left: 10vw;*/
-/*    top: 20vh;*/
-/*    background: radial-gradient(64.49% 167.48% at 37.29% 25.23%, #00c7f4 0%, rgba(166, 0, 244, 0) 100%) , #6004D5;*/
-/*    color: white;*/
-/*    border-radius: 20px;*/
-/*}*/
-
-
-/*#email{*/
-/*    box-sizing: border-box;*/
-/*    position: relative;*/
-/*    padding: 1vw;*/
-/*    width: 40vw;*/
-/*    height: 6vh;*/
-/*    left: 5vw;*/
-/*    top: 27vh;*/
-/*    border: 1px solid #17a4a6;*/
-/*    border-radius: 20px;*/
-/*    margin-bottom: 1vw;*/
-/*}*/
-
-
-
-/*#password{*/
-/*    box-sizing: border-box;*/
-/*    position: relative;*/
-/*    padding: 1vw;*/
-/*    width: 40vw;*/
-/*    height: 6vh;*/
-/*    left: 5vw;*/
-/*    top: 29vh;*/
-/*    border: 1px solid #05a21f;*/
-/*    border-radius: 20px;*/
-/*}*/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #f1f1f1;
+  }
+  
+  .form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 40px;
+    background-color: #fff;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .form h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #333;
+    text-transform: uppercase;
+    font-size: 36px;
+    font-weight: 700;
+  }
+  
+  .form input[type="text"],
+  .form input[type="password"] {
+    border: none;
+    background-color: #f1f1f1;
+    padding: 12px 20px;
+    margin: 8px 0;
+    width: 100%;
+    font-size: 18px;
+    color: #333;
+    border-radius: 25px;
+    outline: none;
+  }
+  
+  .form input[type="submit"] {
+    border: none;
+    background-color: #33a1ff;
+    color: #fff;
+    padding: 12px 40px;
+    margin-top: 30px;
+    font-size: 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .form input[type="submit"]:hover {
+    background-color: #1f8bcf;
+  }
+  
+  #register {
+    border: none;
+    background-color: transparent;
+    color: #333;
+    margin-top: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  

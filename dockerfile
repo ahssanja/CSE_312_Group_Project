@@ -1,21 +1,15 @@
-# The vm we are wroking with
-FROM python:3.8
+FROM ubuntu:latest
 
-# Change the home directory and working directory to the /root folder
 ENV HOME /root
 WORKDIR /root
 
-# Running a shell command to download the neccesary dependancies for the pymongo
-RUN python -m pip install pymongo
-# RUN pip3 install --no-cache-dir flask
-
-# Copy all the contents from this working directory into the VM's working directory
 COPY . .
 
-# The VM will be accessible on port 8080
-EXPOSE 8015
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
-RUN chmod +x /wait
+RUN pip3 install -r requirements.txt
 
-CMD /wait && python3 -u Server/server.py
+EXPOSE 8099
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8099", "Server.server:app"]
