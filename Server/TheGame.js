@@ -34,7 +34,7 @@ function checkWinner() {
         [2, 4, 6] // r-l diagonal
     ];
 
-    const arraylen = allcombinations.length()
+    const arraylen = allcombinations.length
 
     for (var i = 0; i < arraylen; i++) {
 
@@ -43,21 +43,56 @@ function checkWinner() {
         var second = allcombinations[i][1];
         var third = allcombinations[i][2];
 
-        if (board[first] !== '' && board[first] === board[second] && board[first] === board[third]) {
-            document.getElementById('message').innerHTML = board[first] + ' wins!';
+        if (board[first] !== '' && board[second] !== '' && board[third] !== '' ){
+            if (board[first] === board[second] && board[first] === board[third] && board[second] === board[third]){
+                document.getElementById('message').innerHTML = board[first] + ' wins!';
             gameOver = true;
             break;
+            }
         }
-        else{
-            continue;
-        }
+
     }
 
     if (!gameOver && board.indexOf('') === -1) {  //all tiles are full
         document.getElementById('message').innerHTML = 'Tie game!';
         gameOver = true;
     }
+
 }
+
+  document.getElementById("lobby").addEventListener("click", function(){
+    fetch("/lookingforplayers", {method: "POST"}).then(feedback =>{
+        if (feedback === feedback.ok){
+            setInterval(checkForPlayer, 10000)
+        }
+        else{
+
+            const ret = "Failed to join lobby:";
+
+        }
+    })
+    function checkForPlayer() {
+        fetch("/checklobby", {method: "GET"}).then(k =>{
+            if (k.ok) {
+                // Parse the response as JSON
+                return k.json();
+              } else {
+                const ret2 ="Failed to check lobby:"
+              }
+        }).then(json_data => {
+              if (json_data.players.length === 2) {
+
+                // If there are two players, redirect to the game page and clear the interval
+
+              clearInterval(setInterval(checkForPlayer, 10000));
+              window.location.href = "../HTML/Game.html";
+              }}
+        )
+
+  }
+  }
+  );
+
 
 
 

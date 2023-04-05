@@ -71,15 +71,13 @@ def login():
             if item['email'] == email and item['password'] == password:
                 return flask.send_file('../HTML/LandingPage.html')
             else:
-                return 'Invalid login/ password details'
+                return 'Invalid login/password details'
 
 
-# @app.route('/tic-tac-toe')
-# def tictactoe():
-#     # game = TicTacToe.tic_tac_toe()
-#     #output = 'This is the output of my Tic Tac Toe Python code!'
 
-#     return flask.send_file('../HTML/LandingPage.html')
+@app.route('/lookingforplayers', methods=['GET', 'POST'])
+def search():
+
 
 if __name__ == '__main__':
     app.run()
