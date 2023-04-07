@@ -3,6 +3,8 @@ from pymongo import MongoClient
 import html
 app = flask.Flask(__name__)
 
+# A list of players looking for a game
+lobby = []
 
 mongo_client = MongoClient('mongo')
 db = mongo_client['cse312Team']
@@ -51,6 +53,7 @@ def made_new_account():
         store_stuff['password'] = html.escape(password)
         store_stuff['username'] = html.escape(username)
         store_stuff['confirmed'] = html.escape(confirmpassword)
+        store_stuff['wins'] = 0
 
         #user_collection.insert_one(store_stuff)
 
@@ -74,9 +77,22 @@ def login():
                 return 'Invalid login/password details'
 
 
+# Handle POST request to "/lookingforplayers"
+@app.route('/lookingforplayers', methods=['POST'])
+def looking_for_players():
+    global lobby #array
+    player = flask.request.remote_addr  #NOT SEECURE, NEED TO USE SESSION IDs INSTEAD
+    if player not in lobby:
+        lobby.append(player)
 
-@app.route('/lookingforplayers', methods=['GET', 'POST'])
-def search():
+    return '', 200
+
+@app.route('/checklobby', methods=['GET'])
+def check_lobby():
+    global lobby
+
+    return flask.jsonify(lobby)
+
 
 
 if __name__ == '__main__':

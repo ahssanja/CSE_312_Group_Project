@@ -36,12 +36,12 @@ function checkWinner() {
 
     const arraylen = allcombinations.length
 
-    for (var i = 0; i < arraylen; i++) {
+    for (let i = 0; i < arraylen; i++) {
 
         // check through all 3 digits of each array 
-        var first = allcombinations[i][0]; 
-        var second = allcombinations[i][1];
-        var third = allcombinations[i][2];
+        let first = allcombinations[i][0];
+        let second = allcombinations[i][1];
+        let third = allcombinations[i][2];
 
         if (board[first] !== '' && board[second] !== '' && board[third] !== '' ){
             if (board[first] === board[second] && board[first] === board[third] && board[second] === board[third]){
@@ -60,38 +60,30 @@ function checkWinner() {
 
 }
 
-  document.getElementById("lobby").addEventListener("click", function(){
-    fetch("/lookingforplayers", {method: "POST"}).then(feedback =>{
-        if (feedback === feedback.ok){
-            setInterval(checkForPlayer, 10000)
-        }
-        else{
+document.getElementById("lobby").addEventListener("click", function(){
+    var intervalId = setInterval(checkForPlayer, 10000);
+    fetch("/lookingforplayers", {method: "POST"}).then(response =>{
+        if (response.ok){
 
-            const ret = "Failed to join lobby:";
+            return intervalId
 
         }
-    })
+    });
+
     function checkForPlayer() {
-        fetch("/checklobby", {method: "GET"}).then(k =>{
-            if (k.ok) {
-                // Parse the response as JSON
-                return k.json();
-              } else {
-                const ret2 ="Failed to check lobby:"
-              }
-        }).then(json_data => {
-              if (json_data.players.length === 2) {
+        fetch("/checklobby", {method: "GET"}).then(response =>{
+            if (response.ok) {
+                response.json().then(json_data => {
+                    if (json_data.length === 2) {
+                        clearInterval(intervalId);
+                        window.location.href = "../HTML/Game.html";
+                    }
+                });
+            }
+        });
+    }
+});
 
-                // If there are two players, redirect to the game page and clear the interval
-
-              clearInterval(setInterval(checkForPlayer, 10000));
-              window.location.href = "../HTML/Game.html";
-              }}
-        )
-
-  }
-  }
-  );
 
 
 
