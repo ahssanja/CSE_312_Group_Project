@@ -61,7 +61,12 @@ function checkWinner() {
 }
 
 document.getElementById("lobby").addEventListener("click", function(){
+
+    document.getElementById("searching-message").innerHTML = "Searching for players...";
+
     var intervalId = setInterval(checkForPlayer, 10000);
+
+    //add current player to lobby, code in python server
     fetch("/lookingforplayers", {method: "POST"}).then(response =>{
         if (response.ok){
 
@@ -70,6 +75,7 @@ document.getElementById("lobby").addEventListener("click", function(){
         }
     });
 
+    //checks for other players online
     function checkForPlayer() {
         fetch("/checklobby", {method: "GET"}).then(response =>{
             if (response.ok) {
