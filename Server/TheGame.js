@@ -75,14 +75,15 @@ document.getElementById("lobby").addEventListener("click", function(){
         }
     });
 
-    //checks for other players online
+    // Check for other players online
     function checkForPlayer() {
         fetch("/checklobby", {method: "GET"}).then(response =>{
             if (response.ok) {
                 response.json().then(json_data => {
-                    if (json_data.length === 2) {
+                    if (json_data.game_id !== -1) {
                         clearInterval(intervalId);
-                        window.location.href = "../HTML/Game.html";
+
+                        window.location.href = "../HTML/Game.html?game_id=" + json_data.game_id;
                     }
                 });
             }

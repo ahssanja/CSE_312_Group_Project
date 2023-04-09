@@ -2,6 +2,8 @@ import flask
 from pymongo import MongoClient
 import html
 app = flask.Flask(__name__)
+# Create a global list to store games
+games = []
 
 # A list of players looking for a game
 lobby = []
@@ -87,12 +89,25 @@ def looking_for_players():
 
     return '', 200
 
+# Handle GET request to "/checklobby"
+
+
 @app.route('/checklobby', methods=['GET'])
 def check_lobby():
     global lobby
+    global games
 
-    return flask.jsonify(lobby)
+    # Check if there are at least two players in the lobby
+    if len(lobby) > 1:
+        # Create a new game and assign the first two players in the lobby to it
+        games.append([lobby[0], lobby[1]])
+        lobby = lobby[2:]
+        retval_ID = {'game_id': len(games)}
 
+        # Return the game ID to the clients
+        return flask.jsonify(retval_ID)
+    else:
+        return flask.jsonify({'game_id': -1})
 
 
 if __name__ == '__main__':
