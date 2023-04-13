@@ -1,7 +1,14 @@
 import flask
 from pymongo import MongoClient
 import html
+from flask_socketio import SocketIO
+
 app = flask.Flask(__name__)
+socketio = SocketIO(app)
+
+
+
+
 # Create a global list to store games
 games = []
 
@@ -108,6 +115,7 @@ def check_lobby():
         return flask.jsonify(retval_ID)
     else:
         return flask.jsonify({'game_id': -1})
+
 
 
 if __name__ == '__main__':

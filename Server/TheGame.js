@@ -84,6 +84,7 @@ document.getElementById("lobby").addEventListener("click", function(){
                         clearInterval(intervalId);
 
                         window.location.href = "../HTML/Game.html?game_id=" + json_data.game_id;
+
                     }
                 });
             }
