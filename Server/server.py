@@ -29,7 +29,7 @@ def registerhtml():
 
 
 @app.route('/Server/TheGame.js' ,methods=['GET', 'POST'])
-def loginhtml():
+def jsfile():
     return flask.send_file('../Server/TheGame.js')
 
 
