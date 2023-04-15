@@ -1,10 +1,8 @@
 import flask
 from pymongo import MongoClient
 import html
-from flask_socketio import SocketIO
 
 app = flask.Flask(__name__)
-socketio = SocketIO(app)
 
 
 
@@ -27,6 +25,13 @@ def loginhtml():
 @app.route('/HTML/RegisterPage.html', methods=['GET', 'POST'])
 def registerhtml():
     return flask.send_file('../HTML/RegisterPage.html')
+
+
+
+@app.route('/Server/TheGame.js' ,methods=['GET', 'POST'])
+def loginhtml():
+    return flask.send_file('../Server/TheGame.js')
+
 
 
 #CSS
