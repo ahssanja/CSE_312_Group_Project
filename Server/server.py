@@ -27,7 +27,7 @@ def registerhtml():
     return flask.send_file('../HTML/RegisterPage.html')
 
 
-
+#javascript
 @app.route('/Server/TheGame.js' ,methods=['GET', 'POST'])
 def jsfile():
     return flask.send_file('../Server/TheGame.js')
@@ -69,6 +69,11 @@ def made_new_account():
         store_stuff['confirmed'] = html.escape(confirmpassword)
         store_stuff['wins'] = 0
 
+        with open('../HTML/LandingPage.html', 'rb') as b:
+            htmlfile = b.read()
+            htmlfile = htmlfile.replace(b'{X}', store_stuff['username'].encode())
+
+
         #user_collection.insert_one(store_stuff)
 
 
@@ -86,6 +91,10 @@ def login():
 
         for item in data:
             if item['email'] == email and item['password'] == password:
+                with open('index.html', 'rb') as b:
+                    htmlfile = b.read()
+                    htmlfile = htmlfile.replace(b'{X}', item['username'].encode())
+
                 return flask.send_file('../HTML/LandingPage.html')
             else:
                 return 'Invalid login/password details'
