@@ -61,40 +61,6 @@ function checkWinner() {
 }
 
 document.getElementById("lobby").addEventListener("click", function(){
-
     document.getElementById("searching-message").innerHTML = "Searching for players...";
-
-    var intervalId = setInterval(checkForPlayer, 10000);
-
-    //add current player to lobby, code in python server
-    fetch("/lookingforplayers", {method: "POST"}).then(response =>{
-        if (response.ok){
-
-            return intervalId
-
-        }
-    });
-
-    // Check for other players online
-    function checkForPlayer() {
-        fetch("/checklobby", {method: "GET"}).then(response =>{
-            if (response.ok) {
-                response.json().then(json_data => {
-                    if (json_data.game_id !== -1) {
-                        clearInterval(intervalId);
-
-                        window.location.href = "../HTML/Game.html?game_id=" + json_data.game_id;
-
-                    }
-                });
-            }
-        });
-    }
-});
-
-
-
-
-
-
-
+    
+})
