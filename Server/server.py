@@ -2,6 +2,7 @@ import flask
 from pymongo import MongoClient
 import html
 import re
+import os
 import hashlib
 import bcrypt
 import base64
@@ -50,11 +51,14 @@ def landingpagecss():
     if session_token:
         user = user_collection.find_one({'session_token': session_token})
         if user:
-            return flask.render_template('../HTML/LandingPage.html', username=user['username'])
+            template_path = os.path.join('HTML', 'LandingPage.html')
+            return flask.render_template(template_path, username=user['username'])
         else:
-            "1"
+            # Return error message
+            return flask.make_response("Invalid session token", 400)
     else:
-        "2"
+        # Return error message
+        return flask.make_response("No session token found", 400)
 
 
 @app.route('/MadeNewAccount', methods=['GET', 'POST'])
@@ -67,13 +71,13 @@ def made_new_account():
         confirmpassword = entire_data.get('confirmpassword')
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            return "Invalid email address"
+            return flask.make_response("Invalid email address", 400)
 
         if password != confirmpassword:
-            return "Password and confirm passwords don't match"
+            return flask.make_response("Password and confirm passwords don't match", 400)
 
         if len(password) < 8:
-            return "Password too short. Needs at least 8 characters"
+            return flask.make_response("Password too short. Needs at least 8 characters", 400)
 
         salt = bcrypt.gensalt()
 
@@ -102,8 +106,8 @@ def login():
         for item in data:
             print(item)
             if item['email'] == email:
-                    
-                passW = item['password'] # array of salt and hashed password
+
+                passW = item['password']  # array of salt and hashed password
                 salt = passW[0]
                 hashed = passW[1]
                 hashed_password = bcrypt.hashpw(password.encode(), salt)
@@ -115,10 +119,22 @@ def login():
                     session_token = hashlib.sha256(token.encode()).hexdigest()
 
                     user_collection.update_one({'email': email}, {'$set': {'session_token': session_token}})
-                    
-                    return flask.send_file('../HTML/LandingPage.html')
+
+                    response = flask.make_response(flask.send_file('../HTML/LandingPage.html'))
+                    response.set_cookie('session_token', session_token)
+
+                    return response
                 else:
-                    return 'Invalid details entered'
+                    return flask.make_response('Invalid details entered', 400)
+    # Return error message
+    return flask.make_response("Invalid method", 400)
+
+
+@app.route('/lobbyinitiated', methods=['GET', 'POST'])
+def lobby():
+    return "here"
+
+
 
 if __name__ == '__main__':
     app.run()
