@@ -7,6 +7,8 @@ import hashlib
 import bcrypt
 import base64
 import secrets
+import websockets
+
 
 app = flask.Flask(__name__)
 
@@ -126,14 +128,30 @@ def login():
                     return response
                 else:
                     return flask.make_response('Invalid details entered', 400)
-    # Return error message
+
+
     return flask.make_response("Invalid method", 400)
 
 
-@app.route('/lobbyinitiated', methods=['GET', 'POST'])
-def lobby():
-    return "here"
+@app.websocket('/websocket')
+async def websocket(websocket):
+    try:
+        # Perform the WebSocket handshake
+        await websocket.accept()
 
+        # Keep the connection alive
+        while True:
+            # Wait for incoming messages
+            message = await websocket.recv()
+
+            # Do something with the message
+            print(f"Received message: {message}")
+
+            # Send a response back
+            await websocket.send("Response message")
+
+    except websockets.exceptions.ConnectionClosedOK:
+        print("Connection closed")
 
 
 if __name__ == '__main__':

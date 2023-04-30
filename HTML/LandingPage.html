@@ -14,38 +14,11 @@
   <div id="searching-message"></div>
   <div id="response-container"></div>
   <br><br>
-  <button id="logout" onclick="window.location='../HTML/LoginPage.html';">Log out</button>
   <br><br>
   <p id ="issue"> message</p>
-  <script type="text/javascript" src="../Server/TheGame.js"></script>
-  <script type="text/javascript">
-    // Get a reference to the lobby button
-    const lobbyButton = document.querySelector('#lobby');
 
-    // Get a reference to the response container
-    const responseContainer = document.querySelector('#response-container');
 
-    // Add an event listener to the lobby button
-    lobbyButton.addEventListener('click', () => {
-      // Create a new XMLHttpRequest object
-      const xhr = new XMLHttpRequest();
+<script src="../Server/Websockets.js"></script>
 
-      // Set the HTTP method and URL
-      xhr.open('GET', '/lobbyinitiated');
-
-      // Set the callback function for when the response is received
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-          // Handle the response from the backend here
-          const response = JSON.parse(xhr.responseText);
-          // Update the response container with the response data
-          responseContainer.innerText = response.message;
-        }
-      };
-
-      // Send the HTTP request
-      xhr.send();
-    });
-  </script>
 </body>
 </html>
