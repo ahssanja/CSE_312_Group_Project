@@ -2,32 +2,39 @@ import flask
 from pymongo import MongoClient
 import html
 import re
+import bcrypt
 import os
 import hashlib
-import bcrypt
 import base64
 import secrets
-import websockets
+import random
+import time
+
 
 
 app = flask.Flask(__name__)
-
 salt_size = 10
+
+players_waiting = []
+ongoinggames = []
 
 mongo_client = MongoClient('mongo')
 db = mongo_client['cse312Team']
 user_collection = db["users"]
+lobby_db = db["lobby"]
+
+print(os.path.abspath('../templates/LandingPage.html'))
 
 
-# HTML
+# templates
 @app.route('/', methods=['GET', 'POST'])
 def loginhtml():
-    return flask.send_file('../HTML/LoginPage.html')
+    return flask.send_file('../templates/LoginPage.html')
 
 
 @app.route('/HTML/RegisterPage.html', methods=['GET', 'POST'])
 def registerhtml():
-    return flask.send_file('../HTML/RegisterPage.html')
+    return flask.send_file('../templates/RegisterPage.html')
 
 
 # Javascript
@@ -47,24 +54,10 @@ def registercss():
     return flask.send_file('../CSS/RegisterPage.css')
 
 
-@app.route('/CSS/LandingPage.css', methods=['GET', 'POST'])
-def landingpagecss():
-    session_token = flask.request.cookies.get('session_token')
-    if session_token:
-        user = user_collection.find_one({'session_token': session_token})
-        if user:
-            template_path = os.path.join('HTML', 'LandingPage.html')
-            return flask.render_template(template_path, username=user['username'])
-        else:
-            # Return error message
-            return flask.make_response("Invalid session token", 400)
-    else:
-        # Return error message
-        return flask.make_response("No session token found", 400)
-
 
 @app.route('/MadeNewAccount', methods=['GET', 'POST'])
 def made_new_account():
+
     if flask.request.method == 'POST':
         entire_data = flask.request.form
         email = entire_data.get('email')
@@ -87,13 +80,13 @@ def made_new_account():
 
         store_stuff = {}
         store_stuff['email'] = html.escape(email)
-        store_stuff['password'] = [salt , password_hash]
+        store_stuff['password'] = [salt , password_hash] 
         store_stuff['username'] = html.escape(username)
         store_stuff['wins'] = 0
 
         user_collection.insert_one(store_stuff)
 
-    return flask.send_file('../HTML/LoginPage.html')
+    return flask.send_file('../templates/LoginPage.html')
 
 
 @app.route('/LoggedIn', methods=['GET', 'POST'])
@@ -114,6 +107,7 @@ def login():
                 hashed = passW[1]
                 hashed_password = bcrypt.hashpw(password.encode(), salt)
                 print(hashed_password == hashed)
+                print(os.path.abspath('../templates/LandingPage.html'))
 
                 if hashed_password == hashed:
                     token_unfurbished = secrets.token_bytes(32)
@@ -122,36 +116,57 @@ def login():
 
                     user_collection.update_one({'email': email}, {'$set': {'session_token': session_token}})
 
-                    response = flask.make_response(flask.send_file('../HTML/LandingPage.html'))
+
+                    ht = flask.render_template('../templates/LandingPage.html', username=item['username'])
+                    response = flask.make_response(ht)
                     response.set_cookie('session_token', session_token)
 
                     return response
+
                 else:
                     return flask.make_response('Invalid details entered', 400)
-
 
     return flask.make_response("Invalid method", 400)
 
 
-@app.websocket('/websocket')
-async def websocket(websocket):
-    try:
-        # Perform the WebSocket handshake
-        await websocket.accept()
+@app.route('/join-lobby', methods=['POST'])
+def generateGameId():
+    timestamp = int(time.time())  # get the current timestamp as an integer
+    random_str = ''.join(random.choices('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*', k=8))
+    return str(timestamp) + '_' + random_str  # combine the timestamp and random string with a hyphen
 
-        # Keep the connection alive
-        while True:
-            # Wait for incoming messages
-            message = await websocket.recv()
+def join_lobby():
 
-            # Do something with the message
-            print(f"Received message: {message}")
+    playerid = flask.request.json['player_id']
+    lobby_db.insert_one({'player':playerid})
+    players_waiting = lobby_db.count_documents({})
+    if players_waiting >= 2:
 
-            # Send a response back
-            await websocket.send("Response message")
+        the_ids = []
+        for player in lobby_db.find({}):
+            the_ids.append(player['_id'])
+            lobby_db.delete_one({'_id': player['_id']})
 
-    except websockets.exceptions.ConnectionClosedOK:
-        print("Connection closed")
+        player1_id = the_ids.pop(0)
+        player2_id = the_ids.pop(0)
+
+        game_id = generateGameId()
+        ongoinggames.append(game_id)
+
+        player_ids = f'{player1_id},{player2_id}'
+        game_url = flask.url_for('gamePg', id=game_id, player_ids=player_ids, _external=True)
+
+        return flask.redirect(game_url)
+
+    return '', 200
+
+
+@app.route('/game')
+def gamePg():
+    game_file_path = os.path.join(app.root_path, 'templates', 'Game.html')
+    player_ids = flask.request.args.get('player_ids')
+    game_id = flask.request.args.get('id')
+    return flask.render_template(game_file_path, player_ids=player_ids, game_id=game_id)
 
 
 if __name__ == '__main__':

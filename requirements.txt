@@ -1,6 +1,6 @@
 pymongo
 flask
 gunicorn
-flask-socketio
 bcrypt
-websockets
+flask-sock
+flask-login
