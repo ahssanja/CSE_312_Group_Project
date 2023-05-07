@@ -12,8 +12,8 @@ import time
 
 
 
-app = flask.Flask(__name__)
 salt_size = 10
+app = flask.Flask(__name__, template_folder='templates')
 
 players_waiting = []
 ongoinggames = []
@@ -23,35 +23,38 @@ db = mongo_client['cse312Team']
 user_collection = db["users"]
 lobby_db = db["lobby"]
 
-print(os.path.abspath('../templates/LandingPage.html'))
 
+def generateGameId():
+    timestamp = int(time.time())  # get the current timestamp as an integer
+    random_str = ''.join(random.choices('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*', k=8))
+    return str(timestamp) + '_' + random_str  # combine the timestamp and random string with a hyphen
 
 # templates
 @app.route('/', methods=['GET', 'POST'])
 def loginhtml():
-    return flask.send_file('../templates/LoginPage.html')
+    return flask.send_file('templates/LoginPage.html')
 
 
 @app.route('/HTML/RegisterPage.html', methods=['GET', 'POST'])
 def registerhtml():
-    return flask.send_file('../templates/RegisterPage.html')
+    return flask.send_file('templates/RegisterPage.html')
 
 
 # Javascript
 @app.route('/Server/TheGame.js', methods=['GET', 'POST'])
 def jsfile():
-    return flask.send_file('../Server/TheGame.js')
+    return flask.send_file('Scripts/TheGame.js')
 
 
 # CSS
 @app.route('/CSS/LoginPage.css', methods=['GET', 'POST'])
 def logincss():
-    return flask.send_file('../CSS/LoginPage.css')
+    return flask.send_file('CSS/LoginPage.css')
 
 
 @app.route('/CSS/RegisterPage.css', methods=['GET', 'POST'])
 def registercss():
-    return flask.send_file('../CSS/RegisterPage.css')
+    return flask.send_file('CSS/RegisterPage.css')
 
 
 
@@ -86,7 +89,7 @@ def made_new_account():
 
         user_collection.insert_one(store_stuff)
 
-    return flask.send_file('../templates/LoginPage.html')
+    return flask.send_file('templates/LoginPage.html')
 
 
 @app.route('/LoggedIn', methods=['GET', 'POST'])
@@ -107,7 +110,7 @@ def login():
                 hashed = passW[1]
                 hashed_password = bcrypt.hashpw(password.encode(), salt)
                 print(hashed_password == hashed)
-                print(os.path.abspath('../templates/LandingPage.html'))
+                print(os.path.abspath('templates/LandingPage.html'))
 
                 if hashed_password == hashed:
                     token_unfurbished = secrets.token_bytes(32)
@@ -117,8 +120,8 @@ def login():
                     user_collection.update_one({'email': email}, {'$set': {'session_token': session_token}})
 
 
-                    ht = flask.render_template('../templates/LandingPage.html', username=item['username'])
-                    response = flask.make_response(ht)
+                    #ht = flask.render_template('../templates/LandingPage.html', username=item['username'])
+                    response = flask.make_response(flask.send_file('templates/LandingPage.html'))
                     response.set_cookie('session_token', session_token)
 
                     return response
@@ -130,17 +133,14 @@ def login():
 
 
 @app.route('/join-lobby', methods=['POST'])
-def generateGameId():
-    timestamp = int(time.time())  # get the current timestamp as an integer
-    random_str = ''.join(random.choices('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*', k=8))
-    return str(timestamp) + '_' + random_str  # combine the timestamp and random string with a hyphen
-
 def join_lobby():
 
     playerid = flask.request.json['player_id']
     lobby_db.insert_one({'player':playerid})
-    players_waiting = lobby_db.count_documents({})
-    if players_waiting >= 2:
+
+    players_waiting = list(lobby_db.find({}))
+
+    if len(players_waiting) >= 2:
 
         the_ids = []
         for player in lobby_db.find({}):
@@ -163,7 +163,7 @@ def join_lobby():
 
 @app.route('/game')
 def gamePg():
-    game_file_path = os.path.join(app.root_path, 'templates', 'Game.html')
+    game_file_path = 'LandingPage.html'
     player_ids = flask.request.args.get('player_ids')
     game_id = flask.request.args.get('id')
     return flask.render_template(game_file_path, player_ids=player_ids, game_id=game_id)

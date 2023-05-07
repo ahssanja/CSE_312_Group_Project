@@ -4,29 +4,6 @@ let gameOver = false;
 const initialState = {initialBoard: ['', '', '', '', '', '', '', '', ''], initialPlayer: 'X'};
 
 
-function generatePlayerId(){
-    return Math.random().toString(36).substring(2, 8)
-}
-
-
-document.getElementById("lobby").addEventListener("click", function () {
-  document.getElementById("searching-message").innerHTML =  "Searching for players...";
-
-  const xhr = new XMLHttpRequest();
-
-  // set up the request
-  xhr.open('POST', '/join-lobby', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  let playerID = generatePlayerId()
-    const data = {
-        playerid: playerID
-    };
-
-    xhr.send(JSON.stringify(data));
-
-});
-
-
 
 function playerTurn(index) {
     if (!gameOver && board[index] === '') {

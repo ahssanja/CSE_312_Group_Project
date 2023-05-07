@@ -18,7 +18,32 @@
   <p id ="issue"> message</p>
 
 
-<script src="../Server/Websockets.js"></script>
+<script src="../Scripts/TheGame.js"></script>
+
+<script>
+
+function generatePlayerId() {
+    return Math.random().toString(36).substring(2, 8);
+}
+
+document.getElementById("lobby").addEventListener("click", function () {
+
+    document.getElementById("searching-message").innerHTML = "Searching for players...";
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', '/join-lobby', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    let playerID = generatePlayerId()
+    const data = {player_id: playerID};
+
+    xhr.send(JSON.stringify(data));
+});
+
+
+
+</script>
+
 
 </body>
 </html>

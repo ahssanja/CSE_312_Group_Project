@@ -11,4 +11,4 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 8099
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8099", "Server.server:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8099", "server:app"]
