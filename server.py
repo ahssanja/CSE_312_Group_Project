@@ -109,8 +109,7 @@ def login():
                 salt = passW[0]
                 hashed = passW[1]
                 hashed_password = bcrypt.hashpw(password.encode(), salt)
-                print(hashed_password == hashed)
-                print(os.path.abspath('templates/LandingPage.html'))
+
 
                 if hashed_password == hashed:
                     token_unfurbished = secrets.token_bytes(32)
@@ -120,11 +119,12 @@ def login():
                     user_collection.update_one({'email': email}, {'$set': {'session_token': session_token}})
 
 
-                    #ht = flask.render_template('../templates/LandingPage.html', username=item['username'])
-                    response = flask.make_response(flask.send_file('templates/LandingPage.html'))
+                    response = flask.make_response(flask.render_template('LandingPage.html', username=item['username']))
                     response.set_cookie('session_token', session_token)
 
                     return response
+
+
 
                 else:
                     return flask.make_response('Invalid details entered', 400)
@@ -154,19 +154,15 @@ def join_lobby():
         ongoinggames.append(game_id)
 
         player_ids = f'{player1_id},{player2_id}'
-        game_url = flask.url_for('gamePg', id=game_id, player_ids=player_ids, _external=True)
+        base_url = flask.url_for('gamePg', _external=True)
+        game_url = f"{base_url}?id={game_id}&player_ids={player_ids}"
 
-        return flask.redirect(game_url)
+        return flask.render_template(game_url)
 
     return '', 200
 
 
-@app.route('/game')
-def gamePg():
-    game_file_path = 'LandingPage.html'
-    player_ids = flask.request.args.get('player_ids')
-    game_id = flask.request.args.get('id')
-    return flask.render_template(game_file_path, player_ids=player_ids, game_id=game_id)
+
 
 
 if __name__ == '__main__':
