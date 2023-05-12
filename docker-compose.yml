@@ -1,12 +1,20 @@
-version: '3.3'
+version: '3.8'
 services:
-  mongo: 
-    image: mongo:4.2.5
-    ports:
-      - "27017:27017"
-  app:
+  web:
     build: .
-    environment:
-      WAIT_HOSTS: mongo:27017
     ports:
-      - '8099:8099'
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mongo
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/mydb
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

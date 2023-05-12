@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard</title>
+</head>
+<body>
+    <h1>Leaderboard</h1>
+    <ul id="leaderboard">
+    </ul>
+
+    <script>
+        fetch('/leaderboard')
+            .then(response => response.json())
+            .then(users => {
+                const leaderboard = document.getElementById('leaderboard');
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = `${user.username}: ${user.wins} wins`;
+                    leaderboard.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>

@@ -1,14 +1,14 @@
-FROM ubuntu:latest
+FROM node:16-slim
 
 ENV HOME /root
 WORKDIR /root
 
+COPY package*.json ./
+
+RUN npm install --only=production
+
 COPY . .
 
-RUN apt-get update
-RUN apt-get install -y python3 python3-pip
-RUN pip3 install -r requirements.txt
+EXPOSE 8080
 
-EXPOSE 8099
-
-CMD ["gunicorn", "--bind", "0.0.0.0:8099", "server:app"]
+CMD [ "node", "server.js" ]

@@ -1,6 +1,0 @@
-pymongo
-flask
-gunicorn
-bcrypt
-flask-sock
-flask-login

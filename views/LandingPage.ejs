@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Tic Tac Toe</title>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 50px auto;
+      width: 300px;
+    }
+    .cell {
+      height: 100px;
+      border: 1px solid black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="username">Welcome, <%= username %>!</h1>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div id="game-info"></div>
+  <div class="grid">
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+  </div>
+  <input id="join-input" type="text" placeholder="Enter game ID to join" />
+  <button id="join-btn">Join Game</button>
+  <script>var username = "<%= username %>";</script>
+  <script src="../public/client.js"></script>
+</body>
+</html>
