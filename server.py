@@ -45,7 +45,7 @@ def registerhtml():
 # Javascript
 @app.route('/Server/TheGame.js', methods=['GET', 'POST'])
 def jsfile():
-    return flask.send_file('Scripts/TheGame.js')
+    return flask.send_file('TheGame.js')
 
 
 # CSS
