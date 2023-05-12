@@ -3,27 +3,30 @@
         <title>
             Tic-Tac-Toe The Game
         </title>
+        <link href="../CSS/RegisterPage.css" rel="stylesheet" type="text/css">
+
     </head>
     <div class="form">
-        <body>
+        <body style="background-image: url('../tac.jpeg'); background-size: cover;">
             <h1>Tic-Tac-Toe The Game</h1>
             <h2>Register</h2>
             <form action="/register" method="POST">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="username"></label>
+                <input type="text" id="username" name="username" placeholder="Username" required>
                 <br>
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" required>
+                <label for="email"></label>
+                <input type="text" id="email" name="email" placeholder="Email" required>
                 <br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <label for="password"></label>
+                <input type="password" id="password" name="password"  placeholder="Password" required>
                 <br>
-                <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
+                <label for="confirm-password"></label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
                 <br>
                 <button type="submit">Register</button>
             </form>
         </body>
+            <button id="login" onclick="window.location='./index.html';">Have an account? Log in</button>
+
     </div>
-    <button id="login" onclick="window.location='./index.html';">Have an account?</button>
 </html>
