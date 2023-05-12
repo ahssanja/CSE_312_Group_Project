@@ -12,8 +12,6 @@ import time
 
 
 
-
-
 salt_size = 10
 app = flask.Flask(__name__, template_folder='templates')
 
