@@ -3,19 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Tic-Tac-Toe Game!</title>
+  <title>Tic-Tac-Toe Game</title>
   <link href="../CSS/LandingPage.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+
+<body style="background-image: url('../tic.jpeg'); background-repeat: no-repeat; background-size: cover;">
   <h1>Tic-Tac-Toe Game!</h1>
-  <h1>Welcome, {{ username }}!</h1>
+
+  <h2>Welcome, {{ username }}!</h2>
+
   <p>Leaderboard</p>
-  <button id="lobby"> Lobby </button>
+
+  <table>
+    <tr>
+      <th>Player</th>
+      <th>Score</th>
+    </tr>
+
+    <tr>
+      <td>Player 1</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td>Player 2</td>
+      <td>800</td>
+    </tr>
+    <tr>
+      <td>Player 3</td>
+      <td>120</td>
+    </tr>
+
+  </table>
+
+  <br><br>
+  <br><br>
+  <button id="lobby"> Click to Play </button>
   <div id="searching-message"></div>
   <div id="response-container"></div>
   <br><br>
   <br><br>
-  <p id ="issue"> message</p>
 
 <script src="../TheGame.js"></script>
 
@@ -28,7 +54,6 @@ function generatePlayerId() {
 document.getElementById("lobby").addEventListener("click", function () {
 
     document.getElementById("searching-message").innerHTML = "Searching for players...";
-
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', '/join-lobby', true);
