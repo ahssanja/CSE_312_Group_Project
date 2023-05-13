@@ -7,20 +7,24 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const path = require('path');
 const crypto = require('crypto');
+/* importing libraries */
 
+// Creates application in Express
 const app = express();
+// Middleware that helpd parse URLencoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.json());
 
-// telliong Express that the templating engine we are going to use is ejs
+// using EJS as the html templating engine
 app.set('view engine', 'ejs');
 
+// Create a HTTP and Websocket server
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// connect MongoDB to our application
+// connecting to MongoDB
 mongoose.connect('mongodb://mongo:27017/mydb', {useNewUrlParser: true, useUnifiedTopology: true});
 
+// Creating a Schema
 const SchemaForUser = new mongoose.Schema({
   username: String,
   password: String,
@@ -28,41 +32,48 @@ const SchemaForUser = new mongoose.Schema({
   wins: { type: Number, default: 0 }
 });
 
-// Create a model from the schema above
+// Create a Model
 const User = mongoose.model('User', SchemaForUser);
 
+// variable to store the games
 let games = {};
 
+// HomePage
 app.get('/', (req, res) => {
     const fileName = 'index.html';
     const filePath = path.join(__dirname, 'public', fileName);
     res.sendFile(filePath);
 });
 
+// HomePage
 app.get('/index.html', (req, res) => {
   const fileName = 'index.html';
   const filePath = path.join(__dirname, 'public', fileName);
   res.sendFile(filePath);
 });
 
+// Register Page
 app.get('/register.html', (req, res) => {
     const fileName = 'register.html';
     const filePath = path.join(__dirname, 'public', fileName);
     res.sendFile(filePath);
 });
 
+// Landing Page *MIGHT REMOVE*
 app.get('/LandingPage.html', (req, res) => {
     const fileName = 'LandingPage.html';
     const filePath = path.join(__dirname, 'public', fileName);
     res.sendFile(filePath);
 });
 
+// Send Client Side JavaScript
 app.get('/public/client.js', (req, res) => {
     const fileName = 'client.js';
     const filePath = path.join(__dirname, 'public', fileName);
     res.sendFile(filePath);
 });
 
+// When Client submits the form
 app.post('/register', async (req, res) => {
   try {
     // Check if password and confirm password fields match
@@ -88,6 +99,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Get the number of wins and highest go at top
 app.get('/leaderboard', async (req, res) => {
   try {
       const users = await User.find().sort({ wins: -1 }).limit(10);
@@ -97,12 +109,14 @@ app.get('/leaderboard', async (req, res) => {
   }
 });
 
+// Display Leaderboard
 app.get('/leaderboard.html', (req, res) => {
   const fileName = 'leaderboard.html';
   const filePath = path.join(__dirname, 'public', fileName);
   res.sendFile(filePath);
 });
 
+// When client submits the login form
 app.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username });
@@ -128,6 +142,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Handles websocket messages and updates state of the game
 wss.on('connection', (ws) => {
   ws.on('message', async (message) => {
     const data = JSON.parse(message);
@@ -174,6 +189,7 @@ wss.on('connection', (ws) => {
             gameEndMessage = { type: 'end', message: `Player ${winner} wins!` };
             // Update winner in DB
             try {
+              console.log(User.findOne({ username: data.username }));
               await User.findOneAndUpdate(
                 { username: data.username }, 
                 { $inc: { wins: 1 } },
@@ -217,6 +233,7 @@ wss.on('connection', (ws) => {
   });
 });
 
+// Check if a player has won a game
 function checkWin(board) {
   const lines = [
     [0, 1, 2],
@@ -238,7 +255,6 @@ function checkWin(board) {
 
   return null;
 }
-
 
 server.listen(8080, () => {
   console.log('Server started on port 8080');

@@ -3,25 +3,21 @@
         <title>
             Tic-Tac-Toe The Game
         </title>
-        <link href="../CSS/LoginPage.css" rel="stylesheet" type="text/css">
     </head>
     <div class="form">
-        <body style="background-image: url('../tac.jpeg'); background-size: cover;">
-            <h1>Tic-Tac-Toe Game</h1>
+        <body>
+            <h1>Tic-Tac-Toe The Game</h1>
             <h2>Login</h2>
             <form action="/login" method="POST">
-                <label for="username"></label>
-                <input type="text" id="username" name="username" placeholder="Username" required>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
                 <br>
-                <label for="password"> </label>
-                <input type="password" id="password" name="password" placeholder="Password" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
                 <br>
-                <button class ="submitor" type="submit" value = "Login">Login</button>
+                <button type="submit">Login</button>
             </form>
         </body>
-        <button id="register" onclick="window.location='./register.html';">New player? Register here</button>
-
     </div>
-
-
+    <button id="register" onclick="window.location='./register.html';">Register</button>
 </html>
